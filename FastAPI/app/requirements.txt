@@ -1,0 +1,6 @@
+asyncpg
+fastapi
+ormar
+psycopg2-binary
+uvicorn
+fastapi_jwt_auth
