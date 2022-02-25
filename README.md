@@ -1,7 +1,7 @@
 # WhatDidYouForgetToday
 
 <p align="center">
-![logo](./Screenshots/logo.png)
+<img width="300" height="300" src="https://github.com/peshcom/WhatDidYouForgetToday/blob/master/Screenshots/logo.png">
 </p>
 
 ### What is WDYFT?
