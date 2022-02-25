@@ -1,14 +1,7 @@
-#! /usr/bin/env python3
-
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from pydantic import BaseModel
-from sqlalchemy.orm import Session
-
-from .database import Base, get_db, engine
-from .database.models import Users
-
+from .database import Base, engine
 from .api import v1
 
 
@@ -55,28 +48,6 @@ async def read_root():
     return {'status': True}
 
 
-class UserCreate(BaseModel):
-    login: str
-    password: str
-
-
-@app.post('/create_user')
-async def index(user: UserCreate, db: Session = Depends(get_db)):
-    """
-    curl -X POST http://localhost/create_user -H "Content-Type: application/json" -d '{"login":"admin","password":"password"}'
-    """
-    def create_user(db: Session, user: UserCreate):
-        fake_hashed_password = user.password + "notreallyhashed"
-        db_user = Users(login=user.login, hashed_password=fake_hashed_password)
-        db.add(db_user)
-        db.commit()
-        db.refresh(db_user)
-        return db_user
-
-    return create_user(db=db, user=user)
-
-
-# действия при запуске и при завершении
 @app.on_event("startup")
 async def startup():
     """

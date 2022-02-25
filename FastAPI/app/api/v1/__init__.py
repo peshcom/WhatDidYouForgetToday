@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 
 from . import auth
+from . import register
 
 router = APIRouter(
     prefix="/v1",
@@ -9,4 +10,5 @@ router = APIRouter(
 )
 
 router.include_router(auth.router)
+router.include_router(register.router)
 
