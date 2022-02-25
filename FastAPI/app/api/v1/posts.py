@@ -1,11 +1,10 @@
-from fastapi import APIRouter
-from fastapi import Depends
+from fastapi import APIRouter, Depends
 from fastapi_jwt_auth import AuthJWT
 from sqlalchemy.orm import Session
 
-from ...crud.post import create_post, get_posts
+from ...crud.post import create_post, get_posts, delete_posts
 from ...database import get_db
-from ...schemas.post import PostScheme
+from ...schemas.post import PostScheme, PostId
 
 router = APIRouter(
     prefix="/posts",
@@ -52,5 +51,27 @@ def new_post(
     return create_post(
         db=db,
         post=post,
+        user_id=authorize.get_jwt_subject(),
+    )
+
+
+"""
+curl -X DELETE http://localhost/v1/posts/ -d '{"post_id":"1"}' -H "Content-Type: application/json" -H 'Accept: application/json' -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImlhdCI6MTY0NTc5MTAzNSwibmJmIjoxNjQ1NzkxMDM1LCJqdGkiOiIyNjQ4OTI2Yy0yZDc0LTQ0NTQtYmQxNS0zMjQ2MWFlZTMwMmEiLCJleHAiOjE2NDU3OTE5MzUsInR5cGUiOiJhY2Nlc3MiLCJmcmVzaCI6ZmFsc2V9.CitYxfYlzG3uSXgnn_OSI_e6j8KWW4a_xcc5ZacTw_I"
+"""
+
+
+@router.delete('/')
+def delete_post(
+        post: PostId,
+        db: Session = Depends(get_db),
+        authorize: AuthJWT = Depends(),
+):
+    """
+    Создает новый пост
+    """
+    authorize.jwt_required()
+    return delete_posts(
+        db=db,
+        post_id=post.post_id,
         user_id=authorize.get_jwt_subject(),
     )

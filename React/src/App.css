@@ -1,0 +1,7 @@
+main {
+    padding: 15px;
+    min-height: 75vh;
+
+    display: flex;
+    justify-content: center;
+}
