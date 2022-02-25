@@ -15,6 +15,8 @@ class Users(Base):
     hashed_password: str = Column(String, unique=False, index=True, nullable=False, default="")
     is_active: bool = Column(Boolean, default=True)
 
+    posts = relationship("Posts")
+
     def set_password(self, password: AnyStr):
         self.hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
         return self.hashed_password

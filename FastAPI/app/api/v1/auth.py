@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from ...database import get_db
 from ...crud.users import get_user_by_login
-from ...schemas.user import User
+from ...schemas.user import UserScheme
 
 router = APIRouter(
     prefix="/auth",
@@ -22,10 +22,10 @@ curl -X POST http://localhost/v1/auth/login -H "Content-Type: application/json" 
 
 @router.post('/login')
 def login(
-        user: User,
+        user: UserScheme,
         authorize: AuthJWT = Depends(),
         db: Session = Depends(get_db)
-    ):
+):
     db_user = get_user_by_login(db, login=user.login)
     if not db_user:
         raise HTTPException(status_code=401, detail="User not found")
@@ -35,9 +35,10 @@ def login(
 
     # Use create_access_token() and create_refresh_token() to create our
     # access and refresh tokens
-    access_token = authorize.create_access_token(subject=user.login)
-    refresh_token = authorize.create_refresh_token(subject=user.login)
-    return {"access_token": access_token, "refresh_token": refresh_token}
+    return {
+        "access_token": authorize.create_access_token(subject=db_user.id),
+        "refresh_token": authorize.create_refresh_token(subject=db_user.id)
+    }
 
 
 @router.post('/refresh')
@@ -64,5 +65,5 @@ curl -X GET http://localhost/v1/auth/protected -H "Content-Type: application/jso
 def protected(authorize: AuthJWT = Depends()):
     authorize.jwt_required()
 
-    current_user = authorize.get_jwt_subject()
-    return {"user": current_user}
+    user_id = authorize.get_jwt_subject()
+    return {"user_id": user_id}

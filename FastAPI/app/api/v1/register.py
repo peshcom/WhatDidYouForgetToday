@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from ...database import get_db
 from ...crud.users import create_user
-from ...schemas.user import User
+from ...schemas.user import UserScheme
 
 router = APIRouter(
     prefix="/register",
@@ -18,5 +18,5 @@ curl -X POST http://localhost/v1/register/ -H "Content-Type: application/json" -
 
 
 @router.post('/')
-def login(user: User, db: Session = Depends(get_db)):
+def index(user: UserScheme, db: Session = Depends(get_db)):
     return create_user(db=db, user=user)
