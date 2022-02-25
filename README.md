@@ -1,7 +1,10 @@
 # WhatDidYouForgetToday
 
+<p align="center">
 ![logo](./Screenshots/logo.png)
+</p>
 
+### What is WDYFT?
 So WDYFT is TODO application with FastAPI and React
 
 This application use JWT tokens for authentication, and make as an example for a my small pet-project.
